@@ -1,0 +1,30 @@
+﻿@page "/HighScores"
+
+<h1>Add a New High Score</h1>
+
+<p>Current count: @highScore</p>
+
+<p>Last roll was: @lastRoll</p>
+
+<button class="btn btn-primary" @onclick="NewScore">Click me</button>
+
+@code {
+    private int highScore = 0;
+    private string lastRoll = "";
+
+    private void NewScore()
+    {
+        Random random = new Random();
+        int testNum = random.Next((highScore * 2) + 10) + 1;
+        if (testNum > highScore)
+        {
+            highScore = testNum;
+            lastRoll = "A new high score has been entered: " + testNum.ToString();
+        }
+        else
+        {
+            lastRoll = testNum.ToString();
+        }
+
+    }
+}
