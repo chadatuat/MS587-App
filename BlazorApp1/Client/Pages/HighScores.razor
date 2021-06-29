@@ -2,16 +2,31 @@
 
 <h1>Add a New High Score</h1>
 
-<p>Current count: @highScore</p>
+<p>Current roll: @highScore</p>
 
 <p>Last roll was: @lastRoll</p>
+
+<p>Current list of high scores: @sHighScores</p>
+
+<EditForm Model="@oScore" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText id="name" @bind-Value="oScore.Name" />
+
+    <button type="submit">Submit</button>
+</EditForm>
 
 <button class="btn btn-primary" @onclick="NewScore">Click me</button>
 
 @code {
+    private HScore oScore = new HScore();
     private int highScore = 0;
     private string lastRoll = "";
-
+    private string sHighScores = "";
+    private string sName = "";
+    private List<String> slHighScores = new List<String>();
+    private List<HScore> olHighScorees = new List<HScore>();
     private void NewScore()
     {
         Random random = new Random();
@@ -19,6 +34,13 @@
         if (testNum > highScore)
         {
             highScore = testNum;
+            slHighScores.Add(highScore.ToString());
+            sHighScores = "";
+            foreach (HScore sScore in olHighScorees)
+            {
+                sHighScores += sScore.Name + " - " + sScore.Score + Environment.NewLine;
+            }
+            sHighScores = sHighScores.Trim();
             lastRoll = "A new high score has been entered: " + testNum.ToString();
         }
         else
@@ -26,5 +48,15 @@
             lastRoll = testNum.ToString();
         }
 
+    }
+
+    private void HandleValidSubmit()
+    {
+        oScore.Score = lastRoll;
+        if (lastRoll.Length > 0)
+        {
+            olHighScorees.Add(oScore);
+            oScore = new HScore();
+        }
     }
 }
